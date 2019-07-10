@@ -17,7 +17,7 @@ class ParametersManager(models.Manager):
         if parameter_type == 2:
             return 'sql'
         if parameter_type == 3:
-            return 'testcase_result'
+            return 'replacement'
 
 
 class ParameterSqlManager(models.Manager):
@@ -38,3 +38,10 @@ class TestCaseParameterManager(models.Manager):
 class TestSuiteManager(models.Manager):
     def get_object(self, testsuite_id):  # 根据parameter得到一条数据
         return self.get(id=testsuite_id)
+
+
+class TestCasesManager(models.Manager):
+    def get_object(self, testcases_id):  # 根据parameter得到一条数据
+        return self.get(id=testcases_id)
+
+

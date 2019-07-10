@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
-from Management.managers import ParametersManager, ParameterSqlManager, ActionManager, TestCaseManager, TestCaseParameterManager, TestSuiteManager
+from Management.managers import ParametersManager, ParameterSqlManager, ActionManager, TestCaseManager, \
+    TestCaseParameterManager, TestSuiteManager, TestCasesManager
 
 
 # Create your models here.
@@ -75,7 +76,7 @@ class Parameter(BaseTable):
 
     name = models.CharField('名称', max_length=20, null=False)
     desc = models.CharField('描述', max_length=30, null=False)
-    parameter_type = models.IntegerField('1key-value2sql3测试用例执行结果')
+    parameter_type = models.IntegerField('1key-value2sql3测试用例执行结果4python方法5变量替换')
     parameter = models.TextField('参数')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
@@ -91,6 +92,17 @@ class Validate(BaseTable):
     validator = models.TextField('检验')
     type = models.IntegerField('校验种类')
     is_valid = models.BooleanField('是否有效', null=False, default=1)
+
+
+class TestCases(BaseTable):
+    class Meta:
+        verbose_name = '测试用例集'
+        db_table = 'TestCases'
+
+    name = models.CharField('名称', max_length=20, null=False, default='')
+    is_valid = models.BooleanField('是否有效', null=False, default=1)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False)
+    objects = TestCasesManager()
 
 
 class TestSuites(BaseTable):
@@ -123,8 +135,13 @@ class TestCase(BaseTable):
         through='TestCaseParameter',
         through_fields=('testcase', 'parameter'),
     )
+    actions = models.ManyToManyField(
+        Action,
+        through='TestCaseAction',
+        through_fields=('testcase', 'action'),
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    testsuite = models.ForeignKey(TestSuites, on_delete=models.CASCADE, null=True)
+    testcases = models.ForeignKey(TestCases, on_delete=models.CASCADE, null=True)
     objects = TestCaseManager()
 
 

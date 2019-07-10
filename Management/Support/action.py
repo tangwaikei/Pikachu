@@ -1,7 +1,5 @@
 from Management.models import Action
-from django.db import connection
-from Management.Support.util import is_number, http_request
-import time
+from httprunner.parser import is_var_or_func_exist
 
 
 def action(action_id):
@@ -10,25 +8,19 @@ def action(action_id):
     action = a_action.action
     if action_type == 1:
         #sql
-        try:
-            if isinstance(action, str):
-                #判断是否sql
-                cursor = connection.cursor()
-                cursor.execute(action)
-        except (TypeError) as err:
-            print(err)
+        return '${execute_sql($action)}'
     elif action_type == 2:
         #等待时间
-        if is_number(action):
-            time.sleep(action)
-        else:
-            raise RuntimeError('等待时间非数字')
+        return '${wait_some_time($action)}'
     elif action_type == 3:
         #执行http请求
-        http_request(action)
+        return '${http_request($action)}'
     elif action_type == 4:
         #执行测试用例
         pass
     elif action_type == 5:
         #执行脚本方法
-        pass
+        if is_var_or_func_exist(action):
+            return action
+        else:
+            RuntimeError('函数不存在')

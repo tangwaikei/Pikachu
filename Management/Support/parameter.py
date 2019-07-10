@@ -4,6 +4,7 @@ import django
 import json
 from Management.models import Parameter, ParameterSql
 from Management.Support.util import dict_fetchone
+from httprunner.parser import is_var_or_func_exist
 os.environ.setdefault('DJANGO_SETTING_MODULE', 'Management.settings')
 django.setup()
 
@@ -17,7 +18,7 @@ def parameter(parameter_id, parameter_type, parameter_text):
             #将value转换成变量
         except (TypeError, ValueError) as err:
             print('ERROR')#TODO 记日志
-    if type == 'sql':
+    elif type == 'sql':
         try:
             if isinstance(parameter_text, str):
                 cursor = connection.cursor()
@@ -28,6 +29,11 @@ def parameter(parameter_id, parameter_type, parameter_text):
                 return get_result_from_sql(parameter_id=parameter_id, result=result)
         except (TypeError) as err:
             print(err)
+    elif type == 'replacement':
+        if is_var_or_func_exist(parameter):
+            return parameter
+        else:
+            pass#抛出异常
 
 # parameter('sql', 'select * from visa.kfc_order limit 1')
 # parameter(1)
