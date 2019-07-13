@@ -1,3 +1,8 @@
-from django.test import TestCase
+import os
+import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Pikachu.settings')
+django.setup()
+from Management.Support.runner import run_testcases
 
-# Create your tests here.
+
+run_testcases(2)

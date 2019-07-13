@@ -11,13 +11,19 @@ class ParametersManager(models.Manager):
         return self.get(id=parameter_id)
 
     @staticmethod
-    def get_parameter_type(self, parameter_type):
+    def get_parameter_type(parameter_type):
         if parameter_type == 1:
             return 'key-value'
         if parameter_type == 2:
             return 'sql'
         if parameter_type == 3:
+            return ''
+        if parameter_type == 4:
+            return ''
+        if parameter_type == 5:
             return 'replacement'
+        if parameter_type == 6:
+            return 'value'
 
 
 class ParameterSqlManager(models.Manager):

@@ -30,11 +30,13 @@ def parameter(parameter_id, parameter_type, parameter_text):
         except (TypeError) as err:
             print(err)
     elif type == 'replacement':
-        if is_var_or_func_exist(parameter):
-            return parameter
+        if is_var_or_func_exist(parameter_text):
+            return parameter_text
         else:
+            return parameter_text
             pass#抛出异常
-
+    elif type == 'value':
+        return parameter_text
 # parameter('sql', 'select * from visa.kfc_order limit 1')
 # parameter(1)
 

@@ -1,6 +1,5 @@
-
-import io, yaml
-
+import io
+import yaml
 
 
 def dict_fetchone(cursor):

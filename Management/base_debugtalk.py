@@ -1,3 +1,4 @@
+# encoding: utf-8
 import json
 import requests
 from django.db import connection

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Management',
+    'Management'
 ]
 
 MIDDLEWARE = [
@@ -76,8 +76,6 @@ WSGI_APPLICATION = 'Pikachu.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'test2',
         'USER': 'root',
@@ -117,11 +115,10 @@ TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
 
 USE_L10N = False
-
-USE_TZ = True
-
 DATE_FORMAT = 'Y-m-d'
 DATETIME_FORMAT = 'Y-m-d H:i:s'
+USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

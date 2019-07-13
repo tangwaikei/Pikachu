@@ -16,7 +16,7 @@ class BaseTable(models.Model):
         db_table = 'BaseTable'
 
 
-class Group(BaseTable):
+class Groups(BaseTable):
     class Meta:
         verbose_name = '组'
         db_table = 'Group'
@@ -76,10 +76,10 @@ class Parameter(BaseTable):
 
     name = models.CharField('名称', max_length=20, null=False)
     desc = models.CharField('描述', max_length=30, null=False)
-    parameter_type = models.IntegerField('1key-value2sql3测试用例执行结果4python方法5变量替换')
+    parameter_type = models.IntegerField('1key-value2sql3测试用例执行结果4python方法5变量替换6单值')
     parameter = models.TextField('参数')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Groups, on_delete=models.CASCADE)
     parameters = ParametersManager()
 
 
@@ -99,9 +99,9 @@ class TestCases(BaseTable):
         verbose_name = '测试用例集'
         db_table = 'TestCases'
 
-    name = models.CharField('名称', max_length=20, null=False, default='')
+    name = models.CharField('名称', max_length=50, null=False, default='')
     is_valid = models.BooleanField('是否有效', null=False, default=1)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False)
+    group = models.ForeignKey(Groups, on_delete=models.CASCADE, null=False)
     objects = TestCasesManager()
 
 
@@ -112,7 +112,7 @@ class TestSuites(BaseTable):
 
     name = models.CharField('名称', max_length=20, null=False, default='')
     is_valid = models.BooleanField('是否有效', null=False, default=1)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False)
+    group = models.ForeignKey(Groups, on_delete=models.CASCADE, null=False)
     objects = TestSuiteManager()
 
 
@@ -122,11 +122,13 @@ class TestCase(BaseTable):
         db_table = 'TestCase'
 
     name = models.CharField('名称', max_length=20, null=False)
+    is_whole = models.BooleanField('是否在testcase中全局', null=False, default=0)
     desc = models.CharField('描述', max_length=30, null=False)
     is_valid = models.BooleanField('是否有效', null=False, default=1)
     status = models.BooleanField('0待测试1测试中2已测试', null=False, default=1)
     test_status = models.BooleanField('1测试通过2测试失败', null=False, default=1)
     url = models.CharField('请求链接', max_length=200, null=False, default=1)
+    url_type = models.IntegerField('url名称0无1base_url2api', null=False, default=0)
     request = models.CharField('请求信息', max_length=300, null=False)
     method = models.CharField('脚本方法', max_length=100, null=False)
     seq = models.IntegerField('顺序', null=False, default=1)
@@ -173,7 +175,6 @@ class TestCaseParameter(BaseTable):
 
     testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE)
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
-    seq = models.IntegerField('顺序')
     is_valid = models.BooleanField('是否有效', null=False, default=1)
     objects = TestCaseParameterManager()
 
@@ -198,3 +199,5 @@ class TestCaseConfig(BaseTable):
 
     testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE)
     config = models.ForeignKey(Config, on_delete=models.CASCADE)
+
+
