@@ -125,7 +125,7 @@ class TestCase(BaseTable):
     is_whole = models.BooleanField('是否在testcase中全局', null=False, default=0)
     desc = models.CharField('描述', max_length=30, null=False)
     is_valid = models.BooleanField('是否有效', null=False, default=1)
-    status = models.BooleanField('0待测试1测试中2已测试', null=False, default=1)
+    status = models.IntegerField('0待测试1测试中2已测试', null=False, default=0)
     test_status = models.BooleanField('1测试通过2测试失败', null=False, default=1)
     url = models.CharField('请求链接', max_length=200, null=False, default=1)
     url_type = models.IntegerField('url名称0无1base_url2api', null=False, default=0)

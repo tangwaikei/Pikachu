@@ -3,8 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>2222</title>
+    <style>
+    .container {
+        min-width: 100%;
+    }
+    .tr-bg-danger td {
+        background-color: #f2dede;
+    }
+    .tooltip-inner{
+        background-color: inherit !important;
+    }
+    .tooltip.in{
+        opacity:1 !important;
+    }
+</style>
 </head>
+
 <body>
+<div class="content body">
+
+        <div class="box">
+            <div class="box-body no-bottom-padding">
+            </div>
+
+            <div class="box-body">
+                <div class="table-responsive" style="background:#fdfdfd;">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>团队</th>
+                            <th>URL</th>
+                            <th>Method</th>
+                            <th>状态</th>
+                            <th>备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for testcase in testcases_list %}
+                        <tr>
+                            <td>{{ testcase.id }}</td>
+                            <td>{{ testcase.testcases }}</td>
+                            <td>{{ testcase.url }}</td>
+                            <td>{{ testcase.method }}</td>
+                            <td>{% if testcase.status == 0 %} 待测试
+                                {% elif testcase.status == 1 %} 测试中
+                                {% else %} 已测试
+                                {% endif %}
+                            </td>
+                            <td>{{ testcase.id }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<link rel="stylesheet" href="Template/Management/Css/bootstrap-datepicker3.min.css') }}">
+<script src="Template/Management/js/bootstrap-datepicker.min.js') }}"></script>
+<script>
+    $('.datepicker').datepicker({
+        todayBtn: 'linked',
+        autoclose: true,
+        format: "yyyy-mm-dd"
+    });
+    function retry(id) {
+        if (confirm('更新数据？')) {
+
+        }
+        return false;
+    }
+</script>
 
 </body>
 </html>
