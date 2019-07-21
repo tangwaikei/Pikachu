@@ -1,5 +1,6 @@
 import io
 import yaml
+import os
 
 
 def dict_fetchone(cursor):
@@ -40,7 +41,18 @@ def isset_var(var):
     return var_exists
 
 
-def yaml_file_name():
-    pass
+def yml_file(contect):
+    return '{}.yml'.format(contect)
+
+
+def join_yaml_file(path, contect):
+    return os.path.join(path, yml_file(contect))
+
+
+def new_a_file(new_file, mode='a'):
+    if not os.path.exists(new_file):
+        with io.open(new_file, mode) as f:
+            pass
+
 
 

@@ -4,10 +4,31 @@ import re
 import shutil
 from threading import Thread
 from django.core.exceptions import ObjectDoesNotExist
+from httprunner.api import HttpRunner
 from Management.models import TestCase, Parameter, TestCases, Action
 from Management.Support.parameter import parameter
-from Management.Support.util import testcase_to_yml, isset_var
-from httprunner.api import HttpRunner
+from Management.Support.util import testcase_to_yml, isset_var, yml_file, join_yaml_file, new_a_file
+from django.conf import settings
+
+
+def build_debugtalk_first(path):
+    path_match = re.match('.*\.yml$', path)
+    debugtalk_file = 'debugtalk.py'
+    base_debugtalk_file = 'base_debugtalk.py'
+    if not path_match:
+        # 组装debugtalk.py
+        if not os.path.exists(path.strip()):
+            path = path.strip()
+            os.makedirs(path)
+        debugtalk_py_path = os.path.join(path.strip(), debugtalk_file)
+        new_a_file(debugtalk_py_path, 'w')
+        src = base_debugtalk_file
+        dst = debugtalk_py_path
+        Thread(target=shutil.copy, args=[src, dst]).start()
+        testcase_yml_path = yml_file(path)
+    else:
+        testcase_yml_path = path
+    return testcase_yml_path
 
 
 def single_son_testcase(testcase, son_testcase, path, is_bulk):
@@ -19,7 +40,7 @@ def single_son_testcase(testcase, son_testcase, path, is_bulk):
         else:
             son_path = '{}_son'.format(testcase.name).rstrip('.')
         is_son_bulk = len(list(son_testcase)) > 0
-        son_yaml_path = os.path.join(path, son_path + '.yml')
+        son_yaml_path = join_yaml_file(path, son_path)
         for son_testcase in list(son_testcase):
             single_testcase(son_testcase, son_yaml_path, is_son_bulk)
         # config
@@ -28,9 +49,9 @@ def single_son_testcase(testcase, son_testcase, path, is_bulk):
         yaml['test'] = {}
         yaml['test']['name'] = name
         if not is_bulk:
-            testcase_yml_path = os.path.join(path, '{}.yml'.format(testcase.name))
+            testcase_yml_path = join_yaml_file(path, testcase.name)
         else:
-            testcase_yml_path = path + '.yml'
+            testcase_yml_path = yml_file(path)
         # 组装成yml
         if son_yaml_path:
             yaml['test']['testcase'] = son_yaml_path
@@ -87,25 +108,8 @@ def single_testcase(testcase, path, is_bulk):
             if testcase.request:
                 yaml['test']['request'] = testcase.request
             yaml['test']['validate'] = ''  # TODO
-            path_match = re.match('.*\.yml$', path)
-            if not path_match:
-                # 组装debugtalk.py
-                if not os.path.exists(path.strip()):
-                    path = path.strip()
-                    os.makedirs(path)
-                debugtalk_py_path = os.path.join(path.strip(), 'debugtalk.py')
-                if not os.path.exists(debugtalk_py_path):
-                    with io.open(debugtalk_py_path, 'w') as f:
-                        f.write('# encoding: utf-8')
-                src = "base_debugtalk.py"
-                dst = debugtalk_py_path
-                Thread(target=shutil.copy, args=[src, dst]).start()
-                testcase_yml_path = '{}.yml'.format(path)
-            else:
-                testcase_yml_path = path
-            if not os.path.exists(testcase_yml_path):
-                with open(testcase_yml_path, 'a') as f:
-                    pass
+            testcase_yml_path = build_debugtalk_first(path)
+            new_a_file(testcase_yml_path)
             #写入文件
             testcase_to_yml(testcase_yml_path, yaml)
     except ObjectDoesNotExist:
@@ -117,16 +121,17 @@ def run_testcases(testcases_id):
     testcases_name = testcases.name
     group = testcases.group
     group_name = group.name
-    testcases = TestCase.objects.filter(testcases=testcases_id, is_valid=1, parent=0)
-    testcases_list = list(testcases)
+    testcases_list = list(TestCase.objects.filter(testcases=testcases_id, is_valid=1, parent=0))
     is_bulk = len(testcases_list)
+    dir = settings.YAML_DIR
     for testcase in testcases_list:
-        path = os.path.join('TestSuiteYaml', group_name, testcases_name)
+        path = os.path.join(dir, group_name, testcases_name)
         single_testcase(testcase, path, is_bulk)
-    testcase_yml_path = os.path.join('TestSuiteYaml', group_name, testcases_name)
-    testcase_yml_path = '{}.yml'.format(testcase_yml_path)
+    testcase_yml_path = os.path.join(dir, group_name, testcases_name)
+    testcase_yml_path = yml_file(testcase_yml_path)
     runner = HttpRunner(failfast=True)
     runner.run(testcase_yml_path)
+
 
 
 
