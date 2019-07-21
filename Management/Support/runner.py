@@ -4,7 +4,7 @@ import re
 import shutil
 from threading import Thread
 from django.core.exceptions import ObjectDoesNotExist
-from Management.models import TestCase, Parameter, TestCases, TestSuites, Action
+from Management.models import TestCase, Parameter, TestCases, Action
 from Management.Support.parameter import parameter
 from Management.Support.util import testcase_to_yml, isset_var
 from httprunner.api import HttpRunner
