@@ -61,22 +61,10 @@
 
         </div>
     </div>
-
-<link rel="stylesheet" href="Template/Management/Css/bootstrap-datepicker3.min.css') }}">
-<script src="Template/Management/js/bootstrap-datepicker.min.js') }}"></script>
-<script>
-    $('.datepicker').datepicker({
-        todayBtn: 'linked',
-        autoclose: true,
-        format: "yyyy-mm-dd"
-    });
-    function retry(id) {
-        if (confirm('更新数据？')) {
-
-        }
-        return false;
-    }
-</script>
+{% load static %}
+<link rel="stylesheet" href="{% static '/Management/Css/bootstrap-datepicker3.min.css' %}">
+<script src="{% static 'Management/js/jquery.min.js' %}"></script>
+<script src="{% static 'Management/js/bootstrap-datepicker.min.js' %}"></script>
 
 </body>
 </html>
