@@ -25,6 +25,7 @@ def is_number(string):
 
 
 def testcase_to_yml(path, yaml_dict):
+    yaml_dict = [yaml_dict]
     with io.open(path, 'a', encoding='utf-8') as stream:
         yaml.dump(yaml_dict, stream, encoding='utf-8')
 
@@ -37,5 +38,9 @@ def isset_var(var):
     else:
         var_exists = True
     return var_exists
+
+
+def yaml_file_name():
+    pass
 
 

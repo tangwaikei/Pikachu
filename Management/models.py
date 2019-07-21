@@ -132,6 +132,7 @@ class TestCase(BaseTable):
     request = models.CharField('请求信息', max_length=300, null=False)
     method = models.CharField('脚本方法', max_length=100, null=False)
     seq = models.IntegerField('顺序', null=False, default=1)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE)
     parameters = models.ManyToManyField(
         Parameter,
         through='TestCaseParameter',

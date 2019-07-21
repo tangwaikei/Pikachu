@@ -2,3 +2,6 @@
 venv/*
 Pikachu/__pycache__/*
 Management/migrations/*
+Management/TestSuiteYaml/*
+Management/reports/*
+Management/Support/__pycache__/*
